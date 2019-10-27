@@ -1,0 +1,116 @@
+/* SPARROW 2019
+
+    Problem Name: 7638 - Number of Connected Components
+    Problem Link: https://icpcarchive.ecs.baylor.edu/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=5660
+    Source: ACM ICPC Dhaka Regional 2016(F)
+
+*/
+
+
+
+#include <bits/stdc++.h>
+#include <string>
+using namespace std;
+#define ll long long
+
+#define pr(x) cerr << "\n" << (#x) << " is " << (x) << endl
+#define sci(x) scanf("%d",&x)
+#define scl(x) scanf("%lld",&x)
+#define scd(x) scanf("%lf",&x)
+
+#define pfi(x) printf("%d",x)
+#define pfl(x) printf("%lld",x)
+#define pfd(x) printf("%lf",x)
+#define pfc(x) printf("Case %d: ",x)
+#define ps printf(" ")
+#define pn printf("\n")
+#define pb(x) push_back(x)
+#define ppb(x) pop_back(x)
+#define pf(x) push_front(x)
+#define ppf(x) pop_front(x)
+#define in(x,y) insert({x,y})
+#define sv(a) sort(a.begin(),a.end())
+#define zero(arr,a) memset(arr,a,sizeof arr)
+#define mk
+#define mx
+
+int fx[]={0,1,1,1,0,-1,-1,-1};
+int fy[]={1,1,0,-1,-1,-1,0,1};
+
+int p[1000004];
+
+int Find(int x)
+{
+    if(p[x]==x) return x;
+    return p[x]=Find(p[x]);
+}
+
+void Union(int a,int b)
+{
+    p[Find(b)]=Find(a);
+}
+
+int main()
+{
+    //ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+    //freopen("1015.txt","w",stdout);
+    int t;
+    sci(t);
+
+    int cs=1;
+    while(t--)
+    {
+        int n;
+        sci(n);
+
+        vector<int>data;
+        unordered_map<int,int>mp;
+        int mm=0;
+
+        int cnt=0;
+        for(int i=0;i<n;i++){
+            int a;
+            sci(a);
+            mp[a]++;
+            if(mp[a]==1) data.push_back(a);
+            mm=max(mm,a);
+        }
+
+        sv(data);
+
+        for(int i=1;i<=mm;i++) p[i]=i;
+
+        for(int i=data.size()-1;i>=0;i--)
+        {
+            if(data[i]==1) continue;
+            for(int j=2;j*j<=data[i];j++)
+            {
+                if(data[i]%j==0)
+                {
+                    if(j==data[i]/j){
+                        Union(data[i],j);
+                    }
+                    else{
+                        Union(data[i],j);
+                        Union(data[i],data[i]/j);
+                    }
+                }
+            }
+        }
+
+        for(int i=data.size()-1;i>=0;i--){
+            if(data[i]==1) continue;
+            int tmp=Find(data[i]);
+            if(tmp==data[i]) cnt++;
+        }
+
+
+         cnt+=mp[1];
+
+         pfc(cs++);
+         pfi(cnt);pn;
+
+    }
+    return 0;
+}
+
